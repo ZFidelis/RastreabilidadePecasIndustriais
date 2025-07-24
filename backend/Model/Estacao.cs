@@ -1,4 +1,4 @@
-using System.componentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace backend.Model
 {
@@ -12,8 +12,8 @@ namespace backend.Model
         public string? Descricao { get; set; }
         [Required(ErrorMessage = "O campo Invetario e obrigatorio.")]
         public string? Inventario { get; set; }
-        public DataTime DataCriacao { get; set; }
-        public DataTime? DataAtualizacao { get; set; }
+        public DateTime DataCriacao { get; set; }
+        public DateTime? DataAtualizacao { get; set; }
         public bool Ativo { get; set; }
     }
 }

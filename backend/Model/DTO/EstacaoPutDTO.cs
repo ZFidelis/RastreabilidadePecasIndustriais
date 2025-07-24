@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace backend.Model.DTO
 {
-    public class EstacaoPostDTO
+    public class EstacaoPutDTO
     {
         [Required(ErrorMessage = "O campo Nome e obrigatorio.")]
         public string? Nome { get; set; }
