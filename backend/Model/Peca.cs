@@ -6,9 +6,9 @@ namespace backend.Model
     {
         [Key]
         public int Id { get; set; }
-        [Required(ErrorMessage = "O campo PartNumber é obrigatório.")]
+        [Required(ErrorMessage = "O campo Partnumber e obrigatorio.")]
         public string? Partnumber { get; set; }
-        [Required(ErrorMessage = "O campo Descricao é obrigatório.")]
+        [Required(ErrorMessage = "O campo Descricao e obrigatorio.")]
         public string? Descricao { get; set; }
         public DateTime DataCriacao { get; set; }
         public DateTime? DataAtualizacao { get; set; }
