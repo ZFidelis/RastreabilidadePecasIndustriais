@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace backend.Model.DTO
+namespace backend.Model.DTO.Peca
 {
     public class PecaPostDTO
     {

@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using backend.Data;
 using backend.Model;
-using backend.Model.DTO;
+using backend.Model.DTO.Peca;
 
 namespace backend.Controller
 {
@@ -28,6 +28,7 @@ namespace backend.Controller
                 var peca = new Peca {
                     Partnumber = pecaDTO.Partnumber,
                     Descricao = pecaDTO.Descricao,
+                    Status = StatusPeca.Pendente,
                     Ativo = true,
                     DataCriacao = DateTime.Now,
                     DataAtualizacao = null

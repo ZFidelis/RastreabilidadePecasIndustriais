@@ -9,5 +9,6 @@ namespace backend.Data
         
         public DbSet<Peca> tb_peca { get; set; }
         public DbSet<Estacao> tb_estacao { get; set; }
+        public DbSet<HistoricoMovimentacao> tb_historicoMovimentacao { get; set; }
     }
 }

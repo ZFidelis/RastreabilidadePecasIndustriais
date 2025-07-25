@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using backend.Data;
 using backend.Model;
-using backend.Model.DTO;
+using backend.Model.DTO.Estacao;
 
 namespace backend.Controller
 {
@@ -29,6 +29,7 @@ namespace backend.Controller
                     Nome = estacaoDTO.Nome,
                     Descricao = estacaoDTO.Descricao,
                     Inventario = estacaoDTO.Inventario,
+                    Ordem = estacaoDTO.Ordem,
                     Ativo = true,
                     DataCriacao = DateTime.Now,
                     DataAtualizacao = null
@@ -76,5 +77,58 @@ namespace backend.Controller
             }
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateEstacaoById(int id, [FromBody] EstacaoPutDTO estacaoDTO)
+        {
+            if (estacaoDTO == null || id <= 0) {
+                return BadRequest("Dados Invalidos!");
+            }
+
+            try {
+                var estacaoAtual = await _dbContext.tb_estacao.FindAsync(id);
+
+                if (estacaoAtual == null) {
+                    return NotFound("Estacao nao encontrada!");
+                }
+
+                estacaoAtual.Nome = estacaoDTO.Nome;
+                estacaoAtual.Descricao = estacaoDTO.Descricao;
+                estacaoAtual.Inventario = estacaoDTO.Inventario;
+                estacaoAtual.Ordem = estacaoDTO.Ordem;
+                estacaoAtual.Ativo = estacaoDTO.Ativo;
+                estacaoAtual.DataAtualizacao = DateTime.Now;
+                    
+                await _dbContext.SaveChangesAsync();
+
+                return Ok(estacaoAtual);
+            }
+            catch (Exception ex) {
+                return StatusCode(500, ex);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteEstacaoById(int id)
+        {  
+            if (id <= 0) {
+                return BadRequest("ID invalido!");
+            }
+
+            try {
+                var estacao = await _dbContext.tb_estacao.FindAsync(id);
+
+                if (estacao == null) {
+                    return NotFound("Estacao nao encontrada!");
+                }
+
+                _dbContext.tb_estacao.Remove(estacao);
+                await _dbContext.SaveChangesAsync();
+
+                return NoContent();
+            }  
+            catch (Exception ex) {
+                return StatusCode(500, ex);
+            }
+        }
     }
 }
