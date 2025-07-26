@@ -1,16 +1,16 @@
 <div class="container">
   <h2>Cadastro de Estações</h2>
   <div class="estacao-form">
-    <form action="">
+    <form (ngSubmit)="submitEstacao()" #formRef="ngForm">
       <label for="estacao-nome">Nome:</label>
-      <input type="text" id="estacao-nome" name="estacao-nome" placeholder="Digite o Nome da Estação">
+      <input type="text" id="estacao-nome" name="estacao-nome" placeholder="Digite o Nome da Estação" [(ngModel)]="novaEstacao.nome" required>
       <label for="estacao-descricao">Descrição:</label>
-      <input type="text" id="estacao-descricao" name="estacao-descricao" placeholder="Digite a Descrição da Estação">
+      <input type="text" id="estacao-descricao" name="estacao-descricao" placeholder="Digite a Descrição da Estação"[(ngModel)]="novaEstacao.descricao" required>
       <label for="estacao-inventario">Inventário:</label>
-      <input type="text" id="estacao-inventario" name="estacao-inventario" placeholder="Digite o Inventário da Estação">
+      <input type="text" id="estacao-inventario" name="estacao-inventario" placeholder="Digite o Inventário da Estação"[(ngModel)]="novaEstacao.inventario" required>
       <label for="estacao-ordem">Ordem:</label>
-      <input type="text" id="estacao-ordem" name="estacao-ordem" placeholder="Digite a Ordem da Estação">
-      <input class="form-btn" type="submit" value="Cadastrar">
+      <input type="number" id="estacao-ordem" name="estacao-ordem" placeholder="Digite a Ordem da Estação"[(ngModel)]="novaEstacao.ordem" required>
+      <input class="form-btn" type="submit" value="Cadastrar" [disabled]="!formRef.valid">
     </form>
   </div>
 </div>

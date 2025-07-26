@@ -16,6 +16,12 @@
           <td>{{ item.descricao }}</td>
           <td>{{ item.inventario }}</td>
           <td>{{ item.ordem }}</td>
+          @if(item.ativo) {
+            <td>Sim</td>
+          }
+          @else {
+            <td>Não</td>
+          }
           <td class="img-tb">
             <a [routerLink]="['/editar-estacao', item.id]" routerLinkActive="active" >
               <img src="/images/edit-icon.png" alt="edit-icon" width="24">

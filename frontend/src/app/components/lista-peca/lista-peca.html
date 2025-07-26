@@ -5,6 +5,8 @@
     <thead>
       <th scope="col">PartNumber</th>
       <th scope="col">Descrição</th>
+      <th scope="col">Status</th>
+      <th scope="col">Ativo</th>
       <th scope="col">Ações</th>
     </thead>
     <tbody>
@@ -12,6 +14,13 @@
         <tr>
           <td>{{ item.partnumber }}</td>
           <td>{{ item.descricao }}</td>
+          <td>{{ item.statusDescricao }}</td>
+          @if(item.ativo) {
+            <td>Sim</td>
+          }
+          @else {
+            <td>Não</td>
+          }
           <td class="img-tb">
             <a [routerLink]="['/editar-peca', item.id]" routerLinkActive="active" >
               <img src="/images/edit-icon.png" alt="edit-icon" width="24">

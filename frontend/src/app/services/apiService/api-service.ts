@@ -17,4 +17,12 @@ export class ApiService {
   getEstacoes(): Observable<any> {
     return this.http.get(`${this.apiUrl}/Estacao`)
   }
+
+  postPeca(partnumber: string, descricao: string) {
+    return this.http.post(`${this.apiUrl}/Peca`, { partnumber, descricao })
+  }
+
+  postEstacao(nome: string, descricao: string, inventario: string, ordem: number) {
+    return this.http.post(`${this.apiUrl}/Estacao`, { nome, descricao, inventario, ordem })
+  }
 }
