@@ -1,0 +1,20 @@
+<button (click)="submit()"> {{ dadosExternos }}</button>
+<br>
+<br>
+<button (click)="submit2()">Mostrar Titulo</button>
+<br>
+<br>
+<button (click)="submit3()">Enviar Algo</button>
+@if(mustShowTitle) {
+    <h1>Hello World {{ meuTitulo}}</h1>
+}
+@else if (quem == "Isaac") {
+    <h1>Titulo do Isaac</h1>
+}
+@else {
+    <h1>Titulo Escondido</h1>
+}
+
+@for (item of minhaLista; track item) {
+  <p>{{ item }}</p>
+}
