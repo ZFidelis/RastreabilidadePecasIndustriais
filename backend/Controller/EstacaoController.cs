@@ -16,16 +16,31 @@ namespace backend.Controller
         {
             _dbContext = dbContext;
         }
-    
+
         [HttpPost]
         public async Task<IActionResult> AddEstacao(EstacaoPostDTO estacaoDTO)
         {
-            if (estacaoDTO == null)  {
+            if (estacaoDTO == null)
+            {
                 return BadRequest("Dados Invalidos!");
             }
 
-            try {
-                var estacao = new Estacao {
+            try
+            {
+                var existe = (await InventarioExiste(estacaoDTO.Inventario)).Value;
+                if (existe)
+                {
+                    return BadRequest("Inventario ja esta sendo utilizado!");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+            try
+            {
+                var estacao = new Estacao
+                {
                     Nome = estacaoDTO.Nome,
                     Descricao = estacaoDTO.Descricao,
                     Inventario = estacaoDTO.Inventario,
@@ -37,42 +52,49 @@ namespace backend.Controller
 
                 _dbContext.tb_estacao.Add(estacao);
                 await _dbContext.SaveChangesAsync();
-                
+
                 return CreatedAtAction(nameof(GetEstacaoById), new { id = estacao.Id }, estacao);
             }
-            catch (Exception ex)  {
+            catch (Exception ex)
+            {
                 return StatusCode(500, ex);
             }
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Estacao>>> GetEstacoes()
-        {   
-            try {
+        {
+            try
+            {
                 var estacoes = await _dbContext.tb_estacao.ToListAsync();
-                if (estacoes == null || !estacoes.Any()) {
+                if (estacoes == null || !estacoes.Any())
+                {
                     return NotFound("Nenhuma Estacao encontrada!");
                 }
 
                 return Ok(estacoes);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 return StatusCode(500, ex);
             }
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Estacao>> GetEstacaoById(int id)
-        {   
-            try {
+        {
+            try
+            {
                 var estacao = await _dbContext.tb_estacao.FindAsync(id);
-                if (estacao == null) {
+                if (estacao == null)
+                {
                     return NotFound("Estacao nao encontrada!");
                 }
 
                 return Ok(estacao);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 return StatusCode(500, ex);
             }
         }
@@ -80,14 +102,17 @@ namespace backend.Controller
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateEstacaoById(int id, [FromBody] EstacaoPutDTO estacaoDTO)
         {
-            if (estacaoDTO == null || id <= 0) {
+            if (estacaoDTO == null || id <= 0)
+            {
                 return BadRequest("Dados Invalidos!");
             }
 
-            try {
+            try
+            {
                 var estacaoAtual = await _dbContext.tb_estacao.FindAsync(id);
 
-                if (estacaoAtual == null) {
+                if (estacaoAtual == null)
+                {
                     return NotFound("Estacao nao encontrada!");
                 }
 
@@ -97,27 +122,31 @@ namespace backend.Controller
                 estacaoAtual.Ordem = estacaoDTO.Ordem;
                 estacaoAtual.Ativo = estacaoDTO.Ativo;
                 estacaoAtual.DataAtualizacao = DateTime.Now;
-                    
+
                 await _dbContext.SaveChangesAsync();
 
                 return Ok(estacaoAtual);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 return StatusCode(500, ex);
             }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEstacaoById(int id)
-        {  
-            if (id <= 0) {
+        {
+            if (id <= 0)
+            {
                 return BadRequest("ID invalido!");
             }
 
-            try {
+            try
+            {
                 var estacao = await _dbContext.tb_estacao.FindAsync(id);
 
-                if (estacao == null) {
+                if (estacao == null)
+                {
                     return NotFound("Estacao nao encontrada!");
                 }
 
@@ -125,8 +154,23 @@ namespace backend.Controller
                 await _dbContext.SaveChangesAsync();
 
                 return NoContent();
-            }  
-            catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+        }
+        
+        [HttpGet("inventario-existe")]
+        public async Task<ActionResult<bool>> InventarioExiste(string inventario)
+        {
+            try
+            {
+                var peca = await _dbContext.tb_estacao.FirstOrDefaultAsync(p => p.Inventario == inventario);
+                return peca != null;
+            }
+            catch (Exception ex)
+            {
                 return StatusCode(500, ex);
             }
         }

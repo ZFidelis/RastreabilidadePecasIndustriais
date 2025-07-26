@@ -20,12 +20,28 @@ namespace backend.Controller
         [HttpPost]
         public async Task<IActionResult> AddPeca(PecaPostDTO pecaDTO)
         {
-            if (pecaDTO == null)  {
+            if (pecaDTO == null)
+            {
                 return BadRequest("Dados Invalidos!");
             }
 
-            try {
-                var peca = new Peca {
+            try
+            {
+                var existe = (await PartnumberExiste(pecaDTO.Partnumber)).Value;
+                if (existe)
+                {
+                    return BadRequest("Partnumber ja esta sendo utilizado!");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+
+            try
+            {
+                var peca = new Peca
+                {
                     Partnumber = pecaDTO.Partnumber,
                     Descricao = pecaDTO.Descricao,
                     Status = StatusPeca.Pendente,
@@ -36,42 +52,49 @@ namespace backend.Controller
 
                 _dbContext.tb_peca.Add(peca);
                 await _dbContext.SaveChangesAsync();
-                
+
                 return CreatedAtAction(nameof(GetPecaById), new { id = peca.Id }, peca);
             }
-            catch (Exception ex)  {
+            catch (Exception ex)
+            {
                 return StatusCode(500, ex);
             }
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Peca>>> GetPecas()
-        {   
-            try {
+        {
+            try
+            {
                 var pecas = await _dbContext.tb_peca.ToListAsync();
-                if (pecas == null || !pecas.Any()) {
+                if (pecas == null || !pecas.Any())
+                {
                     return NotFound("Nenhuma Peca encontrada!");
                 }
 
                 return Ok(pecas);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 return StatusCode(500, ex);
             }
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Peca>> GetPecaById(int id)
-        {   
-            try {
+        {
+            try
+            {
                 var peca = await _dbContext.tb_peca.FindAsync(id);
-                if (peca == null) {
+                if (peca == null)
+                {
                     return NotFound("Peca nao encontrada!");
                 }
 
                 return Ok(peca);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 return StatusCode(500, ex);
             }
         }
@@ -79,14 +102,17 @@ namespace backend.Controller
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdatePecaById(int id, [FromBody] PecaPutDTO pecaDTO)
         {
-            if (pecaDTO == null || id <= 0) {
+            if (pecaDTO == null || id <= 0)
+            {
                 return BadRequest("Dados Invalidos!");
             }
 
-            try {
+            try
+            {
                 var pecaAtual = await _dbContext.tb_peca.FindAsync(id);
 
-                if (pecaAtual == null) {
+                if (pecaAtual == null)
+                {
                     return NotFound("Peca nao encontrada!");
                 }
 
@@ -94,27 +120,31 @@ namespace backend.Controller
                 pecaAtual.Descricao = pecaDTO.Descricao;
                 pecaAtual.Ativo = pecaDTO.Ativo;
                 pecaAtual.DataAtualizacao = DateTime.Now;
-                    
+
                 await _dbContext.SaveChangesAsync();
 
                 return Ok(pecaAtual);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 return StatusCode(500, ex);
             }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePecaById(int id)
-        {  
-            if (id <= 0) {
+        {
+            if (id <= 0)
+            {
                 return BadRequest("ID invalido!");
             }
 
-            try {
+            try
+            {
                 var peca = await _dbContext.tb_peca.FindAsync(id);
 
-                if (peca == null) {
+                if (peca == null)
+                {
                     return NotFound("Peca nao encontrada!");
                 }
 
@@ -122,8 +152,23 @@ namespace backend.Controller
                 await _dbContext.SaveChangesAsync();
 
                 return NoContent();
-            }  
-            catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+        }
+
+        [HttpGet("partnumber-existe")]
+        public async Task<ActionResult<bool>> PartnumberExiste(string partnumber)
+        {
+            try
+            {
+                var peca = await _dbContext.tb_peca.FirstOrDefaultAsync(p => p.Partnumber == partnumber);
+                return peca != null;
+            }
+            catch (Exception ex)
+            {
                 return StatusCode(500, ex);
             }
         }
