@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { ApiService } from '../../services/apiService/api-service';
+import { ApiService } from '../../../services/apiService/api-service';
 
 
 @Component({
@@ -21,6 +21,18 @@ export class ListaPeca {
       },
       error: (err) => {
         console.error('Erro ao buscar pecas: ', err)
+      }
+    })
+  }
+
+  deletarPeca(id: number) {
+    this._apiService.deletePeca(id).subscribe({
+      next: (data) => {
+        console.log(data);
+        location.reload();
+      },
+      error: (err) => {
+        console.error('Erro ao deletar peça: ', err)
       }
     })
   }

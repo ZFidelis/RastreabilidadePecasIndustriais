@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ApiService } from '../../services/apiService/api-service';
+import { ApiService } from '../../../services/apiService/api-service';
 
 @Component({
   selector: 'app-cadastro-estacao',

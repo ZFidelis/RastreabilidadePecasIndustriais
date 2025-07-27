@@ -1,0 +1,15 @@
+<div class="container">
+  <h2>Edição da Peça: {{ peca.partnumber }}</h2>
+  <div class="peca-form">
+    <form (ngSubmit)="submitEditPeca()" #formRef="ngForm">
+      <label for="peca-partnumber">Partnumber:</label>
+      <input type="text" id="peca-partnumber" name="peca-partnumber" placeholder="Digite o Partnumber da Peça" [(ngModel)]="peca.partnumber" required>
+      <label for="peca-descricao">Descrição:</label>
+      <input type="text" id="peca-descricao" name="peca-descricao" placeholder="Digite a Descrição da Peça" [(ngModel)]="peca.descricao" required>
+      <label for="peca-ativo">Ativo:</label>
+      <input type="checkbox" id="peca-ativo" name="peca-ativo" [(ngModel)]="peca.ativo" required>
+      <input class="form-btn" type="submit" value="Salvar">
+    </form>
+  </div>
+</div>
+

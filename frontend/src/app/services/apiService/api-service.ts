@@ -14,8 +14,16 @@ export class ApiService {
     return this.http.get(`${this.apiUrl}/Peca`)
   }
 
+  getPecaById(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/Peca/${id}`)
+  }
+
   getEstacoes(): Observable<any> {
     return this.http.get(`${this.apiUrl}/Estacao`)
+  }
+
+  getEstacaoById(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/Estacao/${id}`)
   }
 
   getMovimentacoes(partnumber: string): Observable<any> {
@@ -30,6 +38,22 @@ export class ApiService {
     return this.http.post(`${this.apiUrl}/Estacao`, { nome, descricao, inventario, ordem })
   }
 
+  putPeca(id: number,partnumber: string, descricao: string, ativo: boolean) {
+    return this.http.put(`${this.apiUrl}/Peca/${id}`, { partnumber, descricao, ativo})
+  }
+
+  putEstacao(id: number,nome: string, descricao: string, inventario: string, ordem: number, ativo: boolean) {
+    return this.http.put(`${this.apiUrl}/Estacao/${id}`, { nome, descricao, inventario, ordem, ativo})
+  }
+
+  deletePeca(id: number) {
+    return this.http.delete(`${this.apiUrl}/Peca/${id}`)
+  }
+
+  deleteEstacao(id: number) {
+    return this.http.delete(`${this.apiUrl}/Estacao/${id}`)
+  }
+
   verificacaoPartnumber(partnumber: string) {
     return this.http.get(`${this.apiUrl}/Peca/partnumber-existe/${partnumber}`)
   }
@@ -41,4 +65,6 @@ export class ApiService {
   postMovimentacao(partnumber: string, estacaoDestinoId: any, responsavel: string, observacao: string) {
     return this.http.post(`${this.apiUrl}/HistoricoMovimentacao/movimentar`, { partnumber, estacaoDestinoId, responsavel, observacao })
   }
+
+
 }
