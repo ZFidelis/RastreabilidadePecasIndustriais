@@ -17,7 +17,6 @@ export class ListaPeca {
   constructor() {
     this._apiService.getPecas().subscribe({
       next: (data) => {
-        console.log('Dados Recebidos: ', data);
         this.listaPecas = data;
       },
       error: (err) => {

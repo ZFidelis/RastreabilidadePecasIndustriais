@@ -161,7 +161,7 @@ namespace backend.Controller
             }
         }
         
-        [HttpGet("inventario-existe")]
+        [HttpGet("inventario-existe/{inventario}")]
         public async Task<ActionResult<bool>> InventarioExiste(string inventario)
         {
             try

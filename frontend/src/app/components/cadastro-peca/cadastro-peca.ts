@@ -16,14 +16,35 @@ export class CadastroPeca {
     partnumber: '',
     descricao: ''
   }
+  existe: any = false
 
   submitPeca() {
-    this._apiService.postPeca(this.novaPeca.partnumber, this.novaPeca.descricao). subscribe({
-      next: () => {
-        console.log("Peça cadastrada com sucesso!");
-        this.novaPeca = { partnumber: '', descricao: '' };
+    this._apiService.verificacaoPartnumber(this.novaPeca.partnumber).subscribe({
+      next: (existeR) => {
+        this.existe = existeR;
+        if (!existeR) {
+          this._apiService.postPeca(this.novaPeca.partnumber, this.novaPeca.descricao).subscribe({
+            next: () => {
+              console.log("Peça cadastrada com sucesso!")
+              this.novaPeca = { partnumber: '', descricao: '' };
+              this.existe = false;
+            },
+            error: (err) => {
+              console.log("Erro ao cadastrar peça", err)
+            }
+          });
+        }
+        else {
+          console.log("Partnumber já existe");
+        }
       },
-      error: () => console.log("Erro ao Cadastrar peça")
-    })
+      error: (err) => {
+        console.error('Erro ao verificar Partnumber: ', err);
+        this.novaPeca = { partnumber: '', descricao: '' };
+        this.existe = false;
+      }
+    });
   }
+
+
 }

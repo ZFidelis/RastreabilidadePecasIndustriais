@@ -8,6 +8,9 @@
       <input type="text" id="peca-descricao" name="peca-descricao" placeholder="Digite a Descrição da Peça" [(ngModel)]="novaPeca.descricao" required>
       <input class="form-btn" type="submit" value="Cadastrar" [disabled]="!formRef.valid">
     </form>
+    @if (existe) {
+      <span>PartNumber já existe!</span>
+    }
   </div>
 </div>
 

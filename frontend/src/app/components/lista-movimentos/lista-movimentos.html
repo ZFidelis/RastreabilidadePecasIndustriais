@@ -1,0 +1,44 @@
+<div class="container">
+  <h2>Histórico de Movimentações</h2>
+  <div class="peca-form">
+    <form (ngSubmit)="buscaMovimentos()" #formRef="ngForm">
+      <label for="peca-partnumber">Partnumber:</label>
+      <input type="text" id="peca-partnumber" name="peca-partnumber" placeholder="Digite o Partnumber da Peça" [(ngModel)]="partnumber" required>
+      <input class="form-btn" type="submit" value="Buscar" [disabled]="!formRef.valid">
+    </form>
+  </div>
+
+  <table>
+    <thead>
+      <th scope="col">PartNumber</th>
+      <th scope="col">Estação de Origem</th>
+      <th scope="col">Estação de Destino</th>
+      <th scope="col">Data da Movimentação</th>
+      <th scope="col">Responsável</th>
+      <th scope="col">Observação</th>
+    </thead>
+    <tbody>
+      @for (item of listaMovimentacoes; track item) {
+        <tr>
+          <td>{{ item.peca.partnumber }}</td>
+          @if(item.estacaoOrigem) {
+            <td>{{ item.estacaoOrigem.inventario }}</td>
+          }
+          @else {
+            <td>N/A</td>
+          }
+          <td>{{ item.estacaoDestino.inventario }}</td>
+          <td>{{ item.dataMovimentacao | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+          <td>{{ item.responsavel }}</td>
+          <td>{{ item.observacao }}</td>
+      } @empty {
+        <tr>
+          <td colspan="6" class="text-center">Nenhuma movimentação encontrada</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+
+

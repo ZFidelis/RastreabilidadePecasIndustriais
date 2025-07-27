@@ -159,7 +159,7 @@ namespace backend.Controller
             }
         }
 
-        [HttpGet("partnumber-existe")]
+        [HttpGet("partnumber-existe/{partnumber}")]
         public async Task<ActionResult<bool>> PartnumberExiste(string partnumber)
         {
             try

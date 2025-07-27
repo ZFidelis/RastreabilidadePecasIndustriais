@@ -16,7 +16,6 @@ export class ListaEstacao{
   constructor() {
     this._apiService.getEstacoes().subscribe({
       next: (data) => {
-        console.log('Dados Recebidos: ', data);
         this.listaEstacoes = data;
       },
       error: (err) => {

@@ -12,6 +12,9 @@
       <input type="number" id="estacao-ordem" name="estacao-ordem" placeholder="Digite a Ordem da Estação"[(ngModel)]="novaEstacao.ordem" required>
       <input class="form-btn" type="submit" value="Cadastrar" [disabled]="!formRef.valid">
     </form>
+    @if (existe) {
+      <span>Inventário já existe!</span>
+    }
   </div>
 </div>
 

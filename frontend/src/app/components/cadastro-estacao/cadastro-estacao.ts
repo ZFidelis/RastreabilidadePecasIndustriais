@@ -18,13 +18,34 @@ export class CadastroEstacao {
     ordem: 0
   }
 
+  existe: any = false
+
   submitEstacao() {
-    this._apiService.postEstacao(this.novaEstacao.nome, this.novaEstacao.descricao, this.novaEstacao.inventario, this.novaEstacao.ordem). subscribe({
-      next: () => {
-        console.log("Estação cadastrada com sucesso!");
-        this.novaEstacao = { nome: '', descricao: '', inventario: '', ordem: 0 };
+    this._apiService.verificacaoInventario(this.novaEstacao.inventario).subscribe({
+      next: (existeR) => {
+        this.existe = existeR;
+        if (!existeR) {
+          this._apiService.postEstacao(this.novaEstacao.nome, this.novaEstacao.descricao, this.novaEstacao.inventario, this.novaEstacao.ordem). subscribe({
+            next: () => {
+              console.log("Estação cadastrada com sucesso!");
+              this.novaEstacao = { nome: '', descricao: '', inventario: '', ordem: 0 };
+              this.existe = false;
+            },
+            error: (err) => {
+              console.log("Erro ao Cadastrar estação", err)
+            }
+        });
+        }
+        else {
+          console.log("Invetário já existe");
+        }
       },
-      error: () => console.log("Erro ao Cadastrar estação")
+      error: (err) => {
+        console.error('Erro ao buscar Invetário: ', err);
+        this.novaEstacao = { nome: '', descricao: '', inventario: '', ordem: 0 };
+        this.existe = false;
+      }
     })
   }
+
 }
