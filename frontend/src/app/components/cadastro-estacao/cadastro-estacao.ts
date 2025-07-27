@@ -34,7 +34,7 @@ export class CadastroEstacao {
             error: (err) => {
               console.log("Erro ao Cadastrar estação", err)
             }
-        });
+          });
         }
         else {
           console.log("Invetário já existe");

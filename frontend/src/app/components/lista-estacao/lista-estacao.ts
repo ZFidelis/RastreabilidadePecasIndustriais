@@ -19,7 +19,7 @@ export class ListaEstacao{
         this.listaEstacoes = data;
       },
       error: (err) => {
-        console.error('Erro ao buscar pecas: ', err)
+        console.error('Erro ao buscar estacoes: ', err)
       }
     })
   }

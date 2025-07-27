@@ -1,33 +1,60 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { GetBackend } from '../../services/get-backend';
+import { Component, inject } from '@angular/core';
+import { ApiService } from '../../services/apiService/api-service';
+import { FormsModule } from '@angular/forms';
+
+interface Estacao {
+  id: number,
+  nome: string,
+  inventario: string,
+  ordem: number
+}
 
 @Component({
   selector: 'app-home',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
+
 export class Home {
-  private getbackService = inject(GetBackend)
-  meuTitulo = 'Teste!';
-  quem = "Isaac";
-  mustShowTitle = false;
+  private _apiService = inject(ApiService);
+  listaEstacoes: Estacao[] = [];
+  estacaoSelecionada: Estacao[] | null = null;
 
-  minhaLista = ["1","2","3"]
+  partnumber = '';
+  estacaoDestino = '';
+  responsavel = '';
+  observacao = '';
 
-  submit() {
-    this.getbackService.pegaEvento(this.meuTitulo)
+  estacaoDestinoEnvio = 0
+
+  constructor() {
+    this._apiService.getEstacoes().subscribe({
+      next: (data) => {
+        this.listaEstacoes = data;
+        this.listaEstacoes = [...this.listaEstacoes].sort((a,b) => a.ordem - b.ordem);
+      },
+      error: (err) => {
+        console.error('Erro ao buscar pecas: ', err)
+      }
+    })
   }
 
-  submit2() {
-    this.mustShowTitle = !this.mustShowTitle
+  selecionarEstacao(estacao: Estacao) {
+    this.estacaoSelecionada = [estacao];
   }
 
-  submit3() {
-    this.entregaParaOutros.emit(this.dadosExternos);
+
+  submitForm() {
+    console.log("Dados de envio:", this.partnumber, this.estacaoSelecionada?.[0].id, this.responsavel, this.observacao);
+    this._apiService.postMovimentacao(this.partnumber, this.estacaoSelecionada?.[0].id, this.responsavel, this.observacao).subscribe({
+            next: () => {
+              console.log("Movimentação Concluída!")
+              this.partnumber = '', this.estacaoDestino = '', this.responsavel = '', this.observacao = '';
+            },
+            error: (err) => {
+              console.log("Erro ao cadastrar peça", err)
+            }
+          });
   }
-
-  @Input("algumacoisaExterna") dadosExternos!: string;
-
-  @Output() entregaParaOutros = new EventEmitter<string>();
 }

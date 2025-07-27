@@ -14,7 +14,7 @@ export class ListaMovimentos {
 
   listaMovimentacoes: any[] = [];
 
-  partnumber = ''
+  partnumber = '';
 
   buscaMovimentos() {
     this._apiService.getMovimentacoes(this.partnumber). subscribe({

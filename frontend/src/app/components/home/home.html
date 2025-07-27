@@ -1,20 +1,38 @@
-<button (click)="submit()"> {{ dadosExternos }}</button>
-<br>
-<br>
-<button (click)="submit2()">Mostrar Titulo</button>
-<br>
-<br>
-<button (click)="submit3()">Enviar Algo</button>
-@if(mustShowTitle) {
-    <h1>Hello World {{ meuTitulo}}</h1>
-}
-@else if (quem == "Isaac") {
-    <h1>Titulo do Isaac</h1>
-}
-@else {
-    <h1>Titulo Escondido</h1>
-}
+<div class="container">
+  <h2 class="page-title">Envio de Peças</h2>
+  <p>Selecione a estação que deseja enviar a peça</p>
+  <div class="btn-container">
+    @for (item of listaEstacoes; track item) {
+      @if (item.id === estacaoSelecionada?.[0]?.id) {
+        <button (click)="selecionarEstacao(item)" class="estacao-btn-selecionado" [title]="item.nome">
+        {{ item.nome }}
+        </button>
+      }
+      @else {
+        <button (click)="selecionarEstacao(item)" class="estacao-btn" [title]="item.nome">
+          {{ item.nome }}
+        </button>
+      }
+    }
+  </div>
 
-@for (item of minhaLista; track item) {
-  <p>{{ item }}</p>
-}
+  @if (estacaoSelecionada) {
+    <p>Estacao selecionada: {{ estacaoSelecionada[0].nome }}</p>
+    <div class="movimento-form">
+    <form (ngSubmit)="submitForm()" #formRef="ngForm">
+      <label for="movimento-partnumber">Partnumber:</label>
+      <input type="text" id="movimento-partnumber" name="movimento-partnumber" placeholder="Digite o Partnumber para Movimentação" [(ngModel)]="partnumber" required>
+      <br>
+      <label for="movimento-responsavel">Responsável:</label>
+      <input type="text" id="movimento-responsavel" name="movimento-responsavel" placeholder="Digite o Responsável da Movimentação" [(ngModel)]="responsavel" required>
+      <br>
+
+      <label for="movimento-observacao">Observacão:</label>
+      <input type="text" id="movimento-observacao" name="movimento-observacao" placeholder="Digite o Observacão da Movimentação" [(ngModel)]="observacao" required>
+      <br>
+
+      <input class="form-btn" type="submit" value="Movimentar" [disabled]="!formRef.valid">
+    </form>
+  </div>
+  }
+</div>

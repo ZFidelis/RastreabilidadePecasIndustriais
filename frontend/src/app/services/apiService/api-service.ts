@@ -37,4 +37,8 @@ export class ApiService {
   verificacaoInventario(inventario: string) {
     return this.http.get(`${this.apiUrl}/Estacao/inventario-existe/${inventario}`)
   }
+
+  postMovimentacao(partnumber: string, estacaoDestinoId: any, responsavel: string, observacao: string) {
+    return this.http.post(`${this.apiUrl}/HistoricoMovimentacao/movimentar`, { partnumber, estacaoDestinoId, responsavel, observacao })
+  }
 }
