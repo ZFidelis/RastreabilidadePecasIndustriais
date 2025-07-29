@@ -25,7 +25,7 @@ namespace backend.Model
     public enum StatusPeca
     {
         Pendente,
-        EmProgresso,
+        EmProcesso,
         Finalizada
     }
 }
