@@ -2,6 +2,8 @@ using backend.Controller;
 using backend.Data;
 using backend.Model;
 using backend.Model.DTO.HistoricoMovimentacao;
+using backend.Shared.Constants;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,16 +36,27 @@ namespace backend.UnitTests.Controllers
                 DataAtualizacao = null,
                 Ordem = 1
             };
-            var estacaoDestino = new Estacao
+            var estacaoIntermediaria = new Estacao
             {
                 Id = 2,
+                Inventario = "InventarioUnicoIntermediario",
+                Nome = "Estacao Intermediario Teste",
+                Descricao = "Estacao para Testes Unitarios",
+                Ativo = true,
+                DataCriacao = DateTime.Now,
+                DataAtualizacao = null,
+                Ordem = 2
+            };
+            var estacaoDestino = new Estacao
+            {
+                Id = 3,
                 Inventario = "InventarioUnicoDestino",
                 Nome = "Estacao Destino Teste",
                 Descricao = "Estacao para Testes Unitarios",
                 Ativo = true,
                 DataCriacao = DateTime.Now,
                 DataAtualizacao = null,
-                Ordem = 2
+                Ordem = 3
             };
 
             var pecaPendente = new Peca
@@ -54,30 +67,31 @@ namespace backend.UnitTests.Controllers
                 EstacaoAtual = null,
                 DataCriacao = DateTime.Now,
                 DataAtualizacao = DateTime.Now,
-                Status = 0
+                Status = StatusPeca.Pendente
             };
             var pecaEmProcesso = new Peca
             {
                 Id = 2,
                 Partnumber = "Peca Em Processo Teste",
                 Descricao = "Peca para Testes Unitarios",
-                EstacaoAtual = estacaoOrigem,
+                EstacaoAtual = estacaoIntermediaria,
                 DataCriacao = DateTime.Now,
                 DataAtualizacao = DateTime.Now,
-                Status = 0
+                Status = StatusPeca.EmProcesso
             };
             var pecaFinalizada = new Peca
             {
                 Id = 3,
                 Partnumber = "Peca Finalizada Teste",
                 Descricao = "Peca para Testes Unitarios",
-                EstacaoAtual = estacaoOrigem,
+                EstacaoAtual = estacaoDestino,
                 DataCriacao = DateTime.Now,
                 DataAtualizacao = DateTime.Now,
-                Status = 0
+                Status = StatusPeca.Finalizada
             };
 
             _dbContext.tb_estacao.Add(estacaoOrigem);
+            _dbContext.tb_estacao.Add(estacaoIntermediaria);
             _dbContext.tb_estacao.Add(estacaoDestino);
             _dbContext.tb_peca.Add(pecaPendente);
             _dbContext.tb_peca.Add(pecaEmProcesso);
@@ -112,7 +126,7 @@ namespace backend.UnitTests.Controllers
             var movimento = new MovimentarDTO
             {
                 Partnumber = pnPeca,
-                EstacaoDestinoId = 2,
+                EstacaoDestinoId = 3,
                 Responsavel = "Usuario de Testes",
                 Observacao = "Observacao Teste"
             };
@@ -122,6 +136,86 @@ namespace backend.UnitTests.Controllers
             var pecaMovimentada = await _dbContext.tb_peca.FirstAsync(p => p.Partnumber == pnPeca);
 
             Assert.Equal(StatusPeca.Finalizada, pecaMovimentada.Status);
+        }
+
+        [Fact]
+        public async Task MovimentarPeca_NaoPodePularEstacoes()
+        {
+            var pnPeca = "Peca Pendente Teste";
+            var movimento = new MovimentarDTO
+            {
+                Partnumber = pnPeca,
+                EstacaoDestinoId = 3,
+                Responsavel = "Usuario de Testes",
+                Observacao = "Observacao Teste"
+            };
+
+            var result = await _controller.MovimentarDTO(movimento);
+
+            var pecaMovimentada = await _dbContext.tb_peca.FirstAsync(p => p.Partnumber == pnPeca);
+
+            var _requestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Equal(ErrorMessages.PularEstacao, _requestResult.Value);
+        }
+
+        [Fact]
+        public async Task MovimentarPeca_NaoPodeRetrocederEstacoes()
+        {
+            var pnPeca = "Peca Em Processo Teste";
+            var movimento = new MovimentarDTO
+            {
+                Partnumber = pnPeca,
+                EstacaoDestinoId = 1,
+                Responsavel = "Usuario de Testes",
+                Observacao = "Observacao Teste"
+            };
+
+            var result = await _controller.MovimentarDTO(movimento);
+
+            var pecaMovimentada = await _dbContext.tb_peca.FirstAsync(p => p.Partnumber == pnPeca);
+
+            var _requestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Equal(ErrorMessages.RetrocederEstacao, _requestResult.Value);
+        }
+
+        [Fact]
+        public async Task MovimentarPeca_NaoPodeContinuarNaEstacao()
+        {
+            var pnPeca = "Peca Em Processo Teste";
+            var movimento = new MovimentarDTO
+            {
+                Partnumber = pnPeca,
+                EstacaoDestinoId = 2,
+                Responsavel = "Usuario de Testes",
+                Observacao = "Observacao Teste"
+            };
+
+            var result = await _controller.MovimentarDTO(movimento);
+
+            var pecaMovimentada = await _dbContext.tb_peca.FirstAsync(p => p.Partnumber == pnPeca);
+
+            var _requestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Equal(ErrorMessages.MesmaEstacao, _requestResult.Value);
+        }
+
+        [Fact]
+        public async Task MovimentarPeca_NaoPodeMovimentarPecasFinalizadas()
+        {
+            var pnPeca = "Peca Finalizada Teste";
+            var movimento = new MovimentarDTO
+            {
+                Partnumber = pnPeca,
+                EstacaoDestinoId = 2,
+                Responsavel = "Usuario de Testes",
+                Observacao = "Observacao Teste"
+            };
+
+            var result = await _controller.MovimentarDTO(movimento);
+
+            var pecaMovimentada = await _dbContext.tb_peca.FirstAsync(p => p.Partnumber == pnPeca);
+
+            var _requestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Equal(ErrorMessages.PecaFinalizada, _requestResult.Value);
         }
     }
 }
