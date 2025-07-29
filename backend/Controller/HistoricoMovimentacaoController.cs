@@ -73,6 +73,31 @@ namespace backend.Controller
             }
         }
 
+        private async Task<Estacao?> ProximaEstacao(int? ordemAtual)
+        {
+            if (ordemAtual == null)
+            {
+                try
+                {
+                    var estacao = await _dbContext.tb_estacao.OrderBy(e => e.Ordem).FirstOrDefaultAsync();
+                    return estacao;
+                }
+                catch (Exception) {
+                    return null;
+                } 
+            }
+
+            try
+            {
+                var estacao = await _dbContext.tb_estacao.Where(e => e.Ordem > ordemAtual).OrderBy(e => e.Ordem).FirstOrDefaultAsync();
+                return estacao;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
         public HistoricoMovimentacaoController(AppDbContext dbContext)
         {
             _dbContext = dbContext;
@@ -98,7 +123,21 @@ namespace backend.Controller
 
                 var estacaoOrigemId = peca.EstacaoAtual?.Id;
                 var estacaoDestino = await GetEstacao(movimento.EstacaoDestinoId);
+                var proximaEstacao = await ProximaEstacao(peca.EstacaoAtual?.Ordem);
                 var ultimaEstacao = await OrdemUltimaEstacao();
+
+                if (proximaEstacao?.Ordem == null)
+                {
+                    return BadRequest("Proxima Estacao nao encontrada!");
+                }
+                if (proximaEstacao?.Ordem < estacaoDestino?.Ordem)
+                {
+                    return BadRequest("Movimentacoes de retrocesso nao sao permitidas!");
+                }
+                if (proximaEstacao?.Ordem > estacaoDestino?.Ordem)
+                {
+                    return BadRequest("Nao e permitido pular estacoes!");
+                }
 
                 if (estacaoDestino?.Ordem == ultimaEstacao.Value)
                 {
