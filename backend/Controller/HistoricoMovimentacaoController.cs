@@ -22,7 +22,7 @@ namespace backend.Controller
 
                 return peca;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -36,7 +36,7 @@ namespace backend.Controller
                 .Include(p => p.EstacaoAtual)
                 .FirstOrDefaultAsync(p => p.Id == pecaId);
 
-                return peca.EstacaoAtual.Id;
+                return peca?.EstacaoAtual?.Id;
             }
             catch (Exception ex)
             {
@@ -54,7 +54,20 @@ namespace backend.Controller
 
                 return estacao;
             }
-            catch (Exception ex)
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        private async Task<int?> OrdemUltimaEstacao()
+        {
+            try
+            {
+                return await _dbContext.tb_estacao.OrderByDescending(e => e.Ordem).Select(e => e.Ordem).FirstOrDefaultAsync();
+
+            }
+            catch (Exception)
             {
                 return null;
             }
@@ -85,6 +98,16 @@ namespace backend.Controller
 
                 var estacaoOrigemId = peca.EstacaoAtual?.Id;
                 var estacaoDestino = await GetEstacao(movimento.EstacaoDestinoId);
+                var ultimaEstacao = await OrdemUltimaEstacao();
+
+                if (estacaoDestino?.Ordem == ultimaEstacao.Value)
+                {
+                    peca.Status = StatusPeca.Finalizada;
+                }
+                if (estacaoDestino?.Ordem < ultimaEstacao)
+                {
+                     peca.Status = StatusPeca.EmProcesso;
+                }
 
                 var dadosMovimentacao = new HistoricoMovimentacao
                 {
@@ -97,11 +120,13 @@ namespace backend.Controller
                 };
 
                 peca.EstacaoAtual = estacaoDestino;
+                
 
                 _dbContext.tb_historicoMovimentacao.Add(dadosMovimentacao);
                 await _dbContext.SaveChangesAsync();
 
-                return NoContent();
+                var reto = estacaoDestino?.Ordem + " -> " + ultimaEstacao.Value;
+                return Ok(reto);
             }
             catch (Exception ex)
             {
