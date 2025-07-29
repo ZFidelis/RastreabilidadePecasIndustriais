@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using backend.Data;
 using backend.Model;
 using backend.Model.DTO.HistoricoMovimentacao;
+using backend.Shared.Constants;
 
 namespace backend.Controller
 {
@@ -23,22 +24,6 @@ namespace backend.Controller
                 return peca;
             }
             catch (Exception)
-            {
-                return null;
-            }
-        }
-
-        private async Task<int?> GetEstacaoAtualId(int pecaId)
-        {
-            try
-            {
-                var peca = await _dbContext.tb_peca
-                .Include(p => p.EstacaoAtual)
-                .FirstOrDefaultAsync(p => p.Id == pecaId);
-
-                return peca?.EstacaoAtual?.Id;
-            }
-            catch (Exception ex)
             {
                 return null;
             }
@@ -75,16 +60,18 @@ namespace backend.Controller
 
         private async Task<Estacao?> ProximaEstacao(int? ordemAtual)
         {
-            if (ordemAtual == null)
+
+            if (ordemAtual == null) // sera a primeira ocorrencia do PN
             {
                 try
                 {
                     var estacao = await _dbContext.tb_estacao.OrderBy(e => e.Ordem).FirstOrDefaultAsync();
                     return estacao;
                 }
-                catch (Exception) {
+                catch (Exception)
+                {
                     return null;
-                } 
+                }
             }
 
             try
@@ -125,27 +112,40 @@ namespace backend.Controller
                 var estacaoDestino = await GetEstacao(movimento.EstacaoDestinoId);
                 var proximaEstacao = await ProximaEstacao(peca.EstacaoAtual?.Ordem);
                 var ultimaEstacao = await OrdemUltimaEstacao();
-
-                if (proximaEstacao?.Ordem == null)
+                var pecaStatus = peca.Status;
+                
+                if ((movimento.EstacaoDestinoId == estacaoOrigemId) && (pecaStatus != StatusPeca.Pendente))
                 {
-                    return BadRequest("Proxima Estacao nao encontrada!");
-                }
-                if (proximaEstacao?.Ordem < estacaoDestino?.Ordem)
-                {
-                    return BadRequest("Movimentacoes de retrocesso nao sao permitidas!");
-                }
-                if (proximaEstacao?.Ordem > estacaoDestino?.Ordem)
-                {
-                    return BadRequest("Nao e permitido pular estacoes!");
+                    return BadRequest(ErrorMessages.MesmaEstacao);
                 }
 
+                if (pecaStatus != StatusPeca.Finalizada)
+                {
+                    if (proximaEstacao?.Ordem == null)
+                    {
+                        return BadRequest("Proxima Estacao nao encontrada!");
+                    }
+                    else if (proximaEstacao?.Ordem < estacaoDestino?.Ordem)
+                    {
+                        return BadRequest(ErrorMessages.PularEstacao);
+                    }
+                    else if (proximaEstacao?.Ordem > estacaoDestino?.Ordem)
+                    {
+                        return BadRequest(ErrorMessages.RetrocederEstacao);
+                    }
+                }
+                else
+                {
+                    return BadRequest(ErrorMessages.PecaFinalizada);
+                }
+            
                 if (estacaoDestino?.Ordem == ultimaEstacao.Value)
                 {
-                    peca.Status = StatusPeca.Finalizada;
+                    pecaStatus = StatusPeca.Finalizada;
                 }
-                if (estacaoDestino?.Ordem < ultimaEstacao)
+                else if (estacaoDestino?.Ordem < ultimaEstacao)
                 {
-                     peca.Status = StatusPeca.EmProcesso;
+                    pecaStatus = StatusPeca.EmProcesso;
                 }
 
                 var dadosMovimentacao = new HistoricoMovimentacao
@@ -158,6 +158,7 @@ namespace backend.Controller
                     Observacao = movimento.Observacao
                 };
 
+                peca.Status = pecaStatus;
                 peca.EstacaoAtual = estacaoDestino;
                 
 
