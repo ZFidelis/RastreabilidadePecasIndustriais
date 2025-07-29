@@ -6,5 +6,6 @@ namespace backend.Shared.Constants
         public const string MesmaEstacao = "A peca ja esta na estacao informada";
         public const string RetrocederEstacao = "Nao e permitido retroceder estacoes";
         public const string PecaFinalizada = "Esta Peca ja foi finalizada";
+        public const string ProximaEstacaoNaoEncontrada = "Proxima Estacao nao encontrada";
     }
 }

@@ -123,7 +123,7 @@ namespace backend.Controller
                 {
                     if (proximaEstacao?.Ordem == null)
                     {
-                        return BadRequest("Proxima Estacao nao encontrada!");
+                        return BadRequest(ErrorMessages.ProximaEstacaoNaoEncontrada);
                     }
                     else if (proximaEstacao?.Ordem < estacaoDestino?.Ordem)
                     {
