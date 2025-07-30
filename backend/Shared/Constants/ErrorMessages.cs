@@ -7,5 +7,8 @@ namespace backend.Shared.Constants
         public const string RetrocederEstacao = "Nao e permitido retroceder estacoes";
         public const string PecaFinalizada = "Esta Peca ja foi finalizada";
         public const string ProximaEstacaoNaoEncontrada = "Proxima Estacao nao encontrada";
+
+        public const string OrdemExiste = "Esse valor de Ordem ja esta em uso";
+        public const string OrdemMenorIgualZero = "O valor da Ordem precisa ser superior a Zero";
     }
 }

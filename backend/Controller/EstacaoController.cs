@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using backend.Data;
 using backend.Model;
 using backend.Model.DTO.Estacao;
+using backend.Shared.Constants;
 
 namespace backend.Controller
 {
@@ -20,15 +21,19 @@ namespace backend.Controller
         [HttpPost]
         public async Task<IActionResult> AddEstacao(EstacaoPostDTO estacaoDTO)
         {
-            if (estacaoDTO == null)
+            if (estacaoDTO == null || estacaoDTO.Inventario == null)
             {
                 return BadRequest("Dados Invalidos!");
+            }
+            
+            if (estacaoDTO.Ordem <= 0)
+            {
+                return BadRequest(ErrorMessages.OrdemMenorIgualZero);    
             }
 
             try
             {
-                var existe = (await InventarioExiste(estacaoDTO.Inventario)).Value;
-                if (existe)
+                if ((await InventarioExiste(estacaoDTO.Inventario)).Value)
                 {
                     return BadRequest("Inventario ja esta sendo utilizado!");
                 }
@@ -37,6 +42,15 @@ namespace backend.Controller
             {
                 return StatusCode(500, ex);
             }
+
+            var ordemExistente = await _dbContext.tb_estacao.AnyAsync(e => e.Ordem == estacaoDTO.Ordem);
+
+            if (ordemExistente)
+            {
+                return BadRequest(ErrorMessages.OrdemExiste);
+            }
+            
+
             try
             {
                 var estacao = new Estacao
@@ -107,6 +121,11 @@ namespace backend.Controller
                 return BadRequest("Dados Invalidos!");
             }
 
+            if (estacaoDTO.Ordem <= 0)
+            {
+                return BadRequest(ErrorMessages.OrdemMenorIgualZero);    
+            }
+            
             try
             {
                 var estacaoAtual = await _dbContext.tb_estacao.FindAsync(id);
@@ -114,6 +133,17 @@ namespace backend.Controller
                 if (estacaoAtual == null)
                 {
                     return NotFound("Estacao nao encontrada!");
+                }
+
+
+                if (estacaoDTO.Ordem != estacaoAtual.Ordem)
+                {
+                    var ordemExistente = await _dbContext.tb_estacao.AnyAsync(e => e.Ordem == estacaoDTO.Ordem);
+
+                    if (ordemExistente)
+                    {
+                        return BadRequest(ErrorMessages.OrdemExiste);
+                    }
                 }
 
                 estacaoAtual.Nome = estacaoDTO.Nome;
@@ -160,7 +190,7 @@ namespace backend.Controller
                 return StatusCode(500, ex);
             }
         }
-        
+
         [HttpGet("inventario-existe/{inventario}")]
         public async Task<ActionResult<bool>> InventarioExiste(string inventario)
         {
@@ -174,5 +204,6 @@ namespace backend.Controller
                 return StatusCode(500, ex);
             }
         }
+
     }
 }

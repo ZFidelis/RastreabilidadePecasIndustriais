@@ -3,7 +3,6 @@ using backend.Data;
 using backend.Model;
 using backend.Model.DTO.HistoricoMovimentacao;
 using backend.Shared.Constants;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
