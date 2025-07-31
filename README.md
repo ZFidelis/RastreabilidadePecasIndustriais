@@ -12,7 +12,7 @@ Aplicação web para gestão do fluxo de peças industriais, com:
 
 ✔ Histórico completo de movimentações
 
-✔ Controle rigoroso do fluxo de produção
+✔ Movimentações dos partnumbers entre as estações seguindo ordem de processamento
 
 Regras de validação:
 
