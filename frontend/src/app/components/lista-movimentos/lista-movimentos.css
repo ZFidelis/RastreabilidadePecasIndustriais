@@ -1,46 +1,164 @@
-table, td, th {
-  border: 1px solid;
-}
-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: center;
-}
-
-.peca-form {
-  display: flexbox;
-  border-radius: 5px;
-  padding: 20px;
-}
-.peca-form input[type=text] {
-  width: 14rem;
-  padding: 12px 20px;
-  margin: 8px 0;
-  margin-left: 10px;
-  display: inline-block;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
+.container-table {
+    width: 80%;
+    margin: 2rem auto;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
-.form-btn {
-  width: 100px;
-  background-color: #ccc;
-  padding: 14px 20px;
-  margin: 8px 0;
-  margin-left: 20px;
-  border: none;
-  border-radius: 4px;
+.container-table table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
 }
-.form-btn:disabled {
-  background-color: whitesmoke;
-  border: 1px solid #ccc;
+
+.container-table thead th {
+    background-color: #2c3e50;
+    color: white;
+    padding: 12px 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9rem;
 }
-.form-btn:enabled:hover {
-  background-color: #aaa;
-  cursor: pointer;
+
+.container-table tbody td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e0e0e0;
+    color: #333;
+    vertical-align: middle;
+}
+
+
+.container-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.container-table td.action-button {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.container-table td.action-button button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    font-size: 0.85rem;
+}
+
+.container-table td.action-button .edit-button {
+    background-color: #3498db;
+    color: white;
+}
+
+.container-table td.action-button .edit-button:hover {
+    background-color: #2980b9;
+}
+
+.container-table td.action-button .delete-button {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.container-table td.action-button .delete-button:hover {
+    background-color: #c0392b;
 }
 
 .container {
-  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    display: flexbox;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.container h1 {
+    text-align: center;
+}
+
+
+.container-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.peca-form {
+  width: 100%;
+  max-width: 400px;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+}
+
+.input-container {
+  position: relative;
+  flex-grow: 1;
+}
+
+.form-button {
+    box-shadow: 0 6px 10px 0px rgba(0, 0, 0, .3);
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    font-size: 0.85rem;
+    background-color: #3498db;
+    color: white;
+}
+
+.form-button:hover {
+  background-color: #2980b9;
+}
+
+.text-input {
+  width: 80%;
+  background: #fff;
+  color: black;
+  font: inherit;
+  box-shadow: 0 6px 10px 0 rgba(0, 0, 0, .3);
+  border: 0;
+  outline: 0;
+  padding: 12px 18px 12px 18px;
+  position: relative;
+}
+
+label {
+  position: absolute;
+  left: 18px;
+  top: 12px;
+  color: #000;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  background-color: transparent;
+  padding: 0 4px;
+  pointer-events: none;
+  opacity: 0;
+}
+
+
+
+.text-input:focus + label,
+.text-input:not(:placeholder-shown) + label {
+  top: -8px;
+  font-size: 12px;
+  color: #000;
+  background-color: white;
+  z-index: 2;
+  left: 12px;
+  padding: 0 6px;
+  opacity: 1;
+}
+
+.text-input:focus::placeholder {
+  color: transparent;
 }

@@ -1,43 +1,44 @@
 <div class="container">
-  <h2>Estações Cadastradas</h2>
-
-  <table>
-    <thead>
-      <th scope="col">Nome</th>
-      <th scope="col">Descrição</th>
-      <th scope="col">Inventário</th>
-      <th scope="col">Ordem</th>
-      <th scope="col">Ativo</th>
-      <th scope="col">Ações</th>
-    </thead>
-    <tbody>
-      @for (item of listaEstacoes; track item) {
-        <tr>
-          <td>{{ item.nome }}</td>
-          <td>{{ item.descricao }}</td>
-          <td>{{ item.inventario }}</td>
-          <td>{{ item.ordem }}</td>
-          @if(item.ativo) {
-            <td>Sim</td>
-          }
-          @else {
-            <td>Não</td>
-          }
-          <td class="img-tb">
-            <button [routerLink]="['/editar-estacao', item.id]" routerLinkActive="active" >
-              <img src="/images/edit-icon.png" alt="edit-icon" width="24">
-            </button>
-            <button (click)="deletarEstacao(item.id)" >
-              <img src="/images/delete-icon.png" alt="delete-icon" width="24">
-            </button>
-          </td>
-        </tr>
-      } @empty {
-        <tr>
-          <td colspan="2" class="text-center">Nenhuma estação cadastrada</td>
-        </tr>
-      }
-    </tbody>
-  </table>
+  <h1 class="title-table">Estações Cadastradas</h1>
+  <div class="container-table">
+    <table>
+      <thead>
+        <th scope="col" style="border-radius: 15px 0px 0px 0px;">Nome</th>
+        <th scope="col">Descrição</th>
+        <th scope="col">Inventário</th>
+        <th scope="col">Ordem</th>
+        <th scope="col">Ativo</th>
+        <th scope="col" style="border-radius: 0px 15px 0px 0px;">Ações</th>
+      </thead>
+      <tbody>
+        @for (item of listaEstacoes; track item) {
+          <tr>
+            <td>{{ item.nome }}</td>
+            <td>{{ item.descricao }}</td>
+            <td>{{ item.inventario }}</td>
+            <td>{{ item.ordem }}</td>
+            @if(item.ativo) {
+              <td>Sim</td>
+            }
+            @else {
+              <td>Não</td>
+            }
+            <td class="action-button">
+              <button class="edit-button" [routerLink]="['/editar-estacao', item.id]" routerLinkActive="active" >
+                Editar
+              </button>
+              <button class="delete-button" (click)="deletarEstacao(item.id)" >
+                Deletar
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="6">Nenhuma estação cadastrada</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 </div>
 

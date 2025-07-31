@@ -1,18 +1,19 @@
 .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-  padding: 20px;
-  max-width: 800px;
-  margin: 0 auto;
 }
 
 .btn-container {
-  display: grid;
+  display: flex;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 10px;
   margin-top: 20px;
 }
 
-.estacao-btn {
+.estacao-button {
   cursor: pointer;
   background-color: #ccc;
   padding: 14px 20px;
@@ -21,32 +22,72 @@
   border-radius: 4px;
 }
 
-.estacao-btn:enabled:hover {
-  background-color: #aaa;
+.estacao-button:enabled:hover {
+  background-color: #979696;
   cursor: pointer;
 }
 
-.estacao-btn-selecionado {
+.estacao-button-selecionado {
   cursor: pointer;
-  background-color: #aaa;
+  background-color: #979696;
   padding: 14px 20px;
   margin: 8px 0;
   border: none;
   border-radius: 4px;
 }
 
-.movimento-form {
-  display: flexbox;
-  border-radius: 5px;
-  padding: 20px;
+.input-container {
+  position: relative;
+  flex-grow: 1;
 }
-.movimento-form input[type=text] {
-  width: 14rem;
+
+.text-input {
+  width: 80%;
+  background: #fff;
+  color: black;
+  font: inherit;
+  box-shadow: 0 6px 10px 0 rgba(0, 0, 0, .3);
+  border: 0;
+  outline: 0;
+  padding: 12px 18px 12px 18px;
+  position: relative;
+  margin-bottom: 10px;
+}
+
+label {
+  color: #999;
+  font-size: 16px;
+  transition: all 0.2s ease-in;
+  background-color: transparent;
+  padding: 0 4px;
+  pointer-events: none;
+}
+
+.movimento-form {
+  margin: 2rem auto;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.form-button {
+  box-shadow: 0 6px 10px 0px rgba(0, 0, 0, .3);
   padding: 12px 20px;
-  margin: 8px 0;
-  margin-left: 10px;
-  display: inline-block;
-  border: 1px solid #ccc;
+  border: none;
   border-radius: 4px;
-  box-sizing: border-box;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2 ease;
+  font-size: 0.85rem;
+  background-color: #3498db;
+  color: white;
+  margin-top: 20px;
+  margin-right: 30px;
+}
+
+.form-button:hover {
+  background-color: #2e7eb3;
 }

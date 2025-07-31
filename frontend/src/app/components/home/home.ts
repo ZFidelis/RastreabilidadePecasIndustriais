@@ -53,7 +53,7 @@ export class Home {
               this.partnumber = '', this.estacaoDestino = '', this.responsavel = '', this.observacao = '';
             },
             error: (err) => {
-              console.log("Erro ao cadastrar peça", err)
+              console.log(err)
             }
           });
   }

@@ -1,15 +1,15 @@
 <div class="container">
-  <h2 class="page-title">Envio de Peças</h2>
+  <h1 class="page-title">Envio de Peças</h1>
   <p>Selecione a estação que deseja enviar a peça</p>
   <div class="btn-container">
     @for (item of listaEstacoes; track item) {
       @if (item.id === estacaoSelecionada?.[0]?.id) {
-        <button (click)="selecionarEstacao(item)" class="estacao-btn-selecionado" [title]="item.nome">
+        <button (click)="selecionarEstacao(item)" class="estacao-button-selecionado" [title]="item.nome">
         {{ item.nome }}
         </button>
       }
       @else {
-        <button (click)="selecionarEstacao(item)" class="estacao-btn" [title]="item.nome">
+        <button (click)="selecionarEstacao(item)" class="estacao-button" [title]="item.nome">
           {{ item.nome }}
         </button>
       }
@@ -17,22 +17,26 @@
   </div>
 
   @if (estacaoSelecionada) {
-    <p>Estacao selecionada: {{ estacaoSelecionada[0].nome }}</p>
-    <div class="movimento-form">
-    <form (ngSubmit)="submitForm()" #formRef="ngForm">
-      <label for="movimento-partnumber">Partnumber:</label>
-      <input type="text" id="movimento-partnumber" name="movimento-partnumber" placeholder="Digite o Partnumber para Movimentação" [(ngModel)]="partnumber" required>
-      <br>
-      <label for="movimento-responsavel">Responsável:</label>
-      <input type="text" id="movimento-responsavel" name="movimento-responsavel" placeholder="Digite o Responsável da Movimentação" [(ngModel)]="responsavel" required>
-      <br>
+    <div class="container-2">
+      <h2>{{ estacaoSelecionada[0].nome }}:</h2>
+      <div class="movimento-form">
+        <form (ngSubmit)="submitForm()" #formRef="ngForm">
+          <div class="input-container">
+            <label for="movimento-partnumber">Partnumber:</label>
+            <input class="text-input" type="text" id="movimento-partnumber" name="movimento-partnumber" placeholder="Digite o Partnumber para Movimentação" [(ngModel)]="partnumber" required>
+          </div>
+          <div class="input-container">
+            <label for="movimento-responsavel">Responsável:</label>
+            <input class="text-input" type="text" id="movimento-responsavel" name="movimento-responsavel" placeholder="Digite o Responsável da Movimentação" [(ngModel)]="responsavel" required>
+          </div>
+          <div class="input-container">
+            <label for="movimento-observacao">Observacão:</label>
+            <input class="text-input" type="text" id="movimento-observacao" name="movimento-observacao" placeholder="Digite o Observacão da Movimentação" [(ngModel)]="observacao" required>
+          </div>
 
-      <label for="movimento-observacao">Observacão:</label>
-      <input type="text" id="movimento-observacao" name="movimento-observacao" placeholder="Digite o Observacão da Movimentação" [(ngModel)]="observacao" required>
-      <br>
-
-      <input class="form-btn" type="submit" value="Movimentar" [disabled]="!formRef.valid">
-    </form>
-  </div>
+          <input class="form-button" type="submit" value="Movimentar" [disabled]="!formRef.valid">
+        </form>
+      </div>
+    </div>
   }
 </div>

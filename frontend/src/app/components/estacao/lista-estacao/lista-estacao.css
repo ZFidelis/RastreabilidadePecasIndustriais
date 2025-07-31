@@ -1,22 +1,81 @@
-table, td, th {
-  border: 1px solid;
+.container-table {
+    width: 80%;
+    margin: 2rem auto;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: center;
+.container-table table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
 }
 
-.img-tb {
-  gap: 1rem;
+.container-table thead th {
+    background-color: #2c3e50;
+    color: white;
+    padding: 12px 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.container-table tbody td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e0e0e0;
+    color: #333;
+    vertical-align: middle;
+}
+
+
+.container-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.container-table td.action-button {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.container-table td.action-button button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    font-size: 0.85rem;
+}
+
+.container-table td.action-button .edit-button {
+    background-color: #3498db;
+    color: white;
+}
+
+.container-table td.action-button .edit-button:hover {
+    background-color: #2980b9;
+}
+
+.container-table td.action-button .delete-button {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.container-table td.action-button .delete-button:hover {
+    background-color: #c0392b;
 }
 
 .container {
-  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    display: flexbox;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
-button {
-  padding: 0px 20px;
-  margin: 2px;
+.container h1 {
+    text-align: center;
 }
