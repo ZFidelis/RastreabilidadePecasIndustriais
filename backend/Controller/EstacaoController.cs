@@ -116,14 +116,26 @@ namespace backend.Controller
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateEstacaoById(int id, [FromBody] EstacaoPutDTO estacaoDTO)
         {
-            if (estacaoDTO == null || id <= 0)
+            if (estacaoDTO == null || id <= 0 || estacaoDTO.Inventario == null)
             {
                 return BadRequest("Dados Invalidos!");
             }
 
+            try
+            {
+                if ((await InventarioExiste(estacaoDTO.Inventario)).Value)
+                {
+                    return BadRequest("Inventario ja esta sendo utilizado!");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+
             if (estacaoDTO.Ordem <= 0)
             {
-                return BadRequest(ErrorMessages.OrdemMenorIgualZero);    
+                return BadRequest(ErrorMessages.OrdemMenorIgualZero);
             }
             
             try

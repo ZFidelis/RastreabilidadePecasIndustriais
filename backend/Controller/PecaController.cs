@@ -20,7 +20,7 @@ namespace backend.Controller
         [HttpPost]
         public async Task<IActionResult> AddPeca(PecaPostDTO pecaDTO)
         {
-            if (pecaDTO == null)
+            if (pecaDTO == null || pecaDTO.Partnumber == null)
             {
                 return BadRequest("Dados Invalidos!");
             }
@@ -102,10 +102,24 @@ namespace backend.Controller
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdatePecaById(int id, [FromBody] PecaPutDTO pecaDTO)
         {
-            if (pecaDTO == null || id <= 0)
+            if (pecaDTO == null || id <= 0 || pecaDTO.Partnumber == null)
             {
                 return BadRequest("Dados Invalidos!");
             }
+
+            try
+            {
+                var existe = (await PartnumberExiste(pecaDTO.Partnumber)).Value;
+                if (existe)
+                {
+                    return BadRequest("Partnumber ja esta sendo utilizado!");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex);
+            }
+
 
             try
             {
